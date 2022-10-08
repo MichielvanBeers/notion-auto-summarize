@@ -5,6 +5,7 @@ import logging
 import os
 import datetime
 import sys
+import re
 
 # Setup logging
 log_file = os.getcwd() + '/output.log'
@@ -22,7 +23,6 @@ HEADERS = {
     "Content-Type": "application/json",
     "Notion-Version": "2022-06-28"
 }
-
 
 def read_database(database_id, headers):
     read_url = f"https://api.notion.com/v1/databases/{database_id}/query"
@@ -65,29 +65,6 @@ def read_database(database_id, headers):
 
     return pages
 
-
-def page_has_summary(page_id, headers):
-    page_url = f"https://api.notion.com/v1/pages/{page_id}"
-
-    res = requests.request("GET", page_url, headers=headers)
-
-    json_response = res.json()
-
-    current_summary = ""
-
-    summary_list = json_response['properties']['Summary']['rich_text']
-
-    for text in summary_list:
-        current_summary += text['plain_text']
-
-    if current_summary != "":
-        logging.info("Current summary is empty")
-        return True
-    else:
-        logging.info(f"Current summary: {current_summary}")
-        return False
-
-
 def read_page_content(page_id, headers):
     read_url = f"https://api.notion.com/v1/blocks/{page_id}/children?page_size=100"
     res = requests.request("GET", read_url, headers=headers)
@@ -127,9 +104,11 @@ def get_summary(text):
 
     clean_result = result.replace('\n', ' ').replace('\r', '').lstrip()
 
-    logging.info(f"Summary result: {clean_result}")
+    result_without_colon = re.sub(r"^\W+", "", clean_result)
 
-    return(clean_result)
+    logging.info(f"Summary result: {result_without_colon}")
+
+    return(result_without_colon)
 
 
 def add_summary_to_page(page_id, summary, headers):
