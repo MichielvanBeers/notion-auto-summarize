@@ -13,26 +13,29 @@ logging.basicConfig(filename=log_file, filemode='w', level=logging.INFO,
                     format='%(asctime)s | %(name)s | %(levelname)s | %(message)s')
 logging.getLogger().addHandler(logging.StreamHandler())
 
-# Arguments [Token] [Page ID] [Database ID] [OpenAI Token]
+# Arguments [Notion Token] [Database ID] [OpenAI Token]
 NOTION_TOKEN = sys.argv[1]
-PAGE_ID = sys.argv[2]
-DATABASE_ID = sys.argv[3]
-OPEN_AI_TOKEN = sys.argv[4]
+DATABASE_ID = sys.argv[2]
+OPEN_AI_TOKEN = sys.argv[3]
 HEADERS = {
-    "Authorization": "Bearer " + NOTION_TOKEN,
+    "Authorization": "Bearer " + str(NOTION_TOKEN),
     "Content-Type": "application/json",
     "Notion-Version": "2022-06-28"
 }
+PAGE_SIZE =  10
+LAST_UPDATE_DAYS_AGO = 7
 
 def read_database(database_id, headers):
     read_url = f"https://api.notion.com/v1/databases/{database_id}/query"
 
     current_date_time = datetime.datetime.now()
-    date_time_one_week_ago = current_date_time - datetime.timedelta(days=7)
+    date_time_one_week_ago = current_date_time - datetime.timedelta(days=LAST_UPDATE_DAYS_AGO)
     date_time_one_week_ago_iso = date_time_one_week_ago.isoformat()
 
+    logging.info(f"Sending request for {PAGE_SIZE} pages that are updates {LAST_UPDATE_DAYS_AGO} days ago")
+
     request_body = {
-        "page_size": 10,
+        "page_size": PAGE_SIZE,
         "filter": {
             "and": [
                 {
@@ -42,8 +45,8 @@ def read_database(database_id, headers):
                     }
                 },
                 {
-                    "timestamp": "created_time",
-                    "created_time": {
+                    "timestamp": "last_edited_time",
+                    "last_edited_time": {
                         "before": date_time_one_week_ago_iso
                     }
                 },
@@ -54,6 +57,11 @@ def read_database(database_id, headers):
     data = json.dumps(request_body)
 
     res = requests.request("POST", read_url, headers=headers, data=data)
+
+    if not res.ok:
+        logging.error(f"An error occurred. Response code: {res.status_code}. Response body: {res.text}")
+        sys.exit()
+
     response_json = res.json()
 
     pages = response_json['results']
