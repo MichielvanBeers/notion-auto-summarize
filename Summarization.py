@@ -32,7 +32,7 @@ def read_database(database_id, headers):
     date_time_one_week_ago = current_date_time - datetime.timedelta(days=LAST_UPDATE_DAYS_AGO)
     date_time_one_week_ago_iso = date_time_one_week_ago.isoformat()
 
-    logging.info(f"Sending request for {PAGE_SIZE} pages that are updates {LAST_UPDATE_DAYS_AGO} days ago")
+    logging.info(f"Sending request for {PAGE_SIZE} pages that are updated {LAST_UPDATE_DAYS_AGO} days ago")
 
     request_body = {
         "page_size": PAGE_SIZE,
