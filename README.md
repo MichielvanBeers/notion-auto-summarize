@@ -1,30 +1,42 @@
 # Notion automated summarization
 
 ## Introduction
-This is a simple python script that will automatically summarize any content on a page in Notion. It works by retrieving all the pages in a database that are more than X days old and don't have any content in the Summary field. It then sends the content of the page to the [OpenAI API](https://beta.openai.com/overview). This will use machine learning to automatically summarize the content. The content will the be entered in the Summary field.
+This is a simple docker container that will automatically summarize any content on a page in Notion. It works by retrieving all the pages in a database have not been added for X days and don't have any content in the Summary field. It then sends the content of the page to the [OpenAI API](https://beta.openai.com/overview). This will use machine learning to automatically summarize the content. The content will the be entered in the Summary field.
 
 ## Prerequisites
-1. An account at [OpenAI](https://beta.openai.com/)
-2. An API key for OpenAI that can be retrieved [here](https://beta.openai.com/account/api-keys)
-3. An account at [Notion](https://www.notion.so/)
-4. An intergration and API key for Notion. Instructions can be found [here](https://developers.notion.com/docs/getting-started)
-5. An environment with python 3 and [the openai pip package](https://pypi.org/project/openai/) installed
+1. An account at [OpenAI](https://beta.openai.com/).
+2. An API key for OpenAI that can be retrieved [here](https://beta.openai.com/account/api-keys).
+3. An account at [Notion](https://www.notion.so/).
+4. An integration and API key for Notion. Instructions can be found [here](https://developers.notion.com/docs/getting-started).
+5. An environment with [docker](https://docs.docker.com/get-docker/) installed.
 
-## Running the script
-The scripts expects three parameters, in fixed order:
-1. Notion API token
-2. Database ID of the Notion database that you want to summarize:
+## Installation
+### Docker example
 ```
-https://www.notion.so/myworkspace/a8aec43384f447ed84390e8e42c2e089?v=...
-                                  |--------- Database ID --------|
+docker run --name some-name-for-your-container -e NOTION_TOKEN=secret_12345678 -e DATABASE_ID=d82973h2kwldj20239e1 -e OPEN_AI_TOKEN=sk-nd92e2109js09219udj9101oj1290 SUMMARIZATION_FIELD=Summary DAYS_BEFORE_SUMMARY=7 SCAN_FREQUENCY=15 michielvanbeers/notion-auto-summarize
 ```
 
-3. OpenAI API token
+### Docker compose example
+```
+version: '3'
 
-Then run the script by entering in your terminal `python3 Summarize.py 'NOTION_TOKEN' 'DATABASE_ID' 'OPEN_AI_TOKEN'`
-  
-## Automatization
-You can let the script run automatically every 15 minutes be adding it to your crontab (in Linux)
+services:
+  notion-auto-summarize:
+    image: michielvanbeers/notion-auto-ocr
+    restart: unless-stopped
+    environment:
+      - NOTION_TOKEN=secret_12345678
+      - DATABASE_ID=d82973h2kwldj20239e1
+      - OPEN_AI_TOKEN=sk-nd92e2109js09219udj9101oj1290
+      - SUMMARIZATION_FIELD=Summary
+      - DAYS_BEFORE_SUMMARY=7
+      - SCAN_FREQUENCY=15 # Optional
 ```
-*/15 * * * * cd /[LOCATION OF THE SCRIPT]; /usr/bin/python3 ./Summarize.py 'NOTION_TOKEN' 'DATABASE_ID' 'OPEN_AI_TOKEN'
-```
+
+### Environment variables
+* **NOTION_TOKEN**: API token to integrate with Notion. Don't forget to allow your intergration access to your database
+* **DATABASE_ID**: ID of the database that you want to scan
+* **OPEN_AI_TOKEN**: API token to allow communication with OpenAI
+* **SUMMARIZATION_FIELD**: Field where the summary of the page will be written to
+* **DAYS_BEFORE_SUMMARY**: The amount of days that need to have passed before the summary of the article is created
+* **SCAN_FREQUENCY**: Determines after how many minutes a new scan is done (in minutes)
