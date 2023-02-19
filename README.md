@@ -11,6 +11,8 @@ This is a simple docker container that will automatically summarize any content 
 5. An environment with [docker](https://docs.docker.com/get-docker/) installed.
 
 ## Installation
+Installation and running this scripts can be done through either Docker or Docker Compose.
+
 ### Docker example
 ```
 docker run --name some-name-for-your-container -e NOTION_TOKEN=secret_12345678 -e DATABASE_ID=d82973h2kwldj20239e1 -e OPEN_AI_TOKEN=sk-nd92e2109js09219udj9101oj1290 SUMMARIZATION_FIELD=Summary DAYS_BEFORE_SUMMARY=7 SCAN_FREQUENCY=15 michielvanbeers/notion-auto-summarize
