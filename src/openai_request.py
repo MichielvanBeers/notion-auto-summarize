@@ -8,7 +8,8 @@ class OpenAIRequest:
 
     def get_summary(self, text: str) -> str:
         """
-        Query the OpenAI end-point using the 'tl;dr' prompt and clean the end-result to one string.
+        Query the OpenAI end-point using the 'tl;dr' prompt
+        and clean the end-result to string.
         """
         openai.api_key = self.token
 
