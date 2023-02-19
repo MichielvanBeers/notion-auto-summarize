@@ -1,4 +1,5 @@
 # Notion automated summarization
+![](https://i.imgur.com/qT1wADo.png)
 
 ## Introduction
 This is a simple docker container that will automatically summarize any content on a page in Notion. It works by retrieving all the pages in a database have not been added for X days and don't have any content in the Summary field. It then sends the content of the page to the [OpenAI API](https://beta.openai.com/overview). This will use machine learning to automatically summarize the content. The content will the be entered in the Summary field.
