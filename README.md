@@ -24,7 +24,7 @@ version: '3'
 
 services:
   notion-auto-summarize:
-    image: michielvanbeers/notion-auto-ocr
+    image: michielvanbeers/notion-auto-summarize
     restart: unless-stopped
     environment:
       - NOTION_TOKEN=secret_12345678
