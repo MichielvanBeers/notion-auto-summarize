@@ -9,6 +9,7 @@ then
     python app.py
 else
     echo "Found scan frequency variable, adding crontab"
+    cat > output.log
     (crontab -l 2>/dev/null; echo "*/$RUN_FREQUENCY * * * * cd /app; /usr/local/bin/python3 ./app.py > output.log") | crontab -  
 
     echo "Scanning every $RUN_FREQUENCY minute(s)"
