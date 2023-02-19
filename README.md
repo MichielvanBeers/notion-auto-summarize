@@ -15,7 +15,7 @@ Installation and running this scripts can be done through either Docker or Docke
 
 ### Docker example
 ```
-docker run --name some-name-for-your-container -e NOTION_TOKEN=secret_12345678 -e DATABASE_ID=d82973h2kwldj20239e1 -e OPEN_AI_TOKEN=sk-nd92e2109js09219udj9101oj1290 SUMMARIZATION_FIELD=Summary DAYS_BEFORE_SUMMARY=7 SCAN_FREQUENCY=15 michielvanbeers/notion-auto-summarize
+docker run --name some-name-for-your-container -e NOTION_TOKEN=secret_12345678 -e DATABASE_ID=d82973h2kwldj20239e1 -e OPEN_AI_TOKEN=sk-nd92e2109js09219udj9101oj1290 SUMMARIZATION_FIELD=Summary DAYS_BEFORE_SUMMARY=7 RUN_FREQUENCY=15 michielvanbeers/notion-auto-summarize
 ```
 
 ### Docker compose example
@@ -32,7 +32,7 @@ services:
       - OPEN_AI_TOKEN=sk-nd92e2109js09219udj9101oj1290
       - SUMMARIZATION_FIELD=Summary
       - DAYS_BEFORE_SUMMARY=7
-      - SCAN_FREQUENCY=15 # Optional
+      - RUN_FREQUENCY=15 # Optional
 ```
 
 ### Environment variables
@@ -41,4 +41,4 @@ services:
 * **OPEN_AI_TOKEN**: API token to allow communication with OpenAI
 * **SUMMARIZATION_FIELD**: Field where the summary of the page will be written to
 * **DAYS_BEFORE_SUMMARY**: The amount of days that need to have passed before the summary of the article is created
-* **SCAN_FREQUENCY**: Determines after how many minutes a new scan is done (in minutes)
+* **RUN_FREQUENCY**: Determines after how many minutes a new scan is done (in minutes)
