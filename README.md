@@ -43,3 +43,10 @@ services:
 * **SUMMARIZATION_FIELD**: Field where the summary of the page will be written to
 * **DAYS_BEFORE_SUMMARY**: The amount of days that need to have passed before the summary of the article is created
 * **RUN_FREQUENCY**: Determines after how many minutes a new scan is done (in minutes)
+
+## Development
+This repository contains a [VSCode Devcontainer](https://code.visualstudio.com/docs/devcontainers/containers). To make use of this, make sure to install the VSCode Devcontainer extension and then:
+1. Click on the button below:
+[![VSCode Devcontainer](https://img.shields.io/static/v1?label=VSCode%20Devcontainer&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/MichielvanBeers/notion-auto-summarize/)
+OR
+2. Clone into the repository, open in VSCode and click 'Reopen in Container'.
