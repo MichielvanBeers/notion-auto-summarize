@@ -6,6 +6,7 @@ from src.openai_request import OpenAIRequest
 NOTION_TOKEN = os.environ["NOTION_TOKEN"]
 DATABASE_ID = os.environ["DATABASE_ID"]
 OPEN_AI_TOKEN = os.environ["OPEN_AI_TOKEN"]
+OPEN_AI_MODEL = os.environ.get("MODEL", "gpt-3.5-turbo")
 SCAN_FREQUENCY = (
     os.environ["SCAN_FREQUENCY"] if "SCAN_FREQUENCY" in os.environ else None
 )
@@ -18,7 +19,7 @@ HEADERS = {
 }
 
 
-openai_request = OpenAIRequest(OPEN_AI_TOKEN)
+openai_request = OpenAIRequest(OPEN_AI_TOKEN, OPEN_AI_MODEL)
 notion = Notion(HEADERS, 7)
 
 notion_content = notion.read_database(DATABASE_ID)

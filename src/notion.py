@@ -43,8 +43,6 @@ class Notion:
         if pages == []:
             print("The query didn't match any results")
 
-        print(f"Pages results: {pages}")
-
         return pages
 
     def read_page_content(self, page_id: str) -> str:
@@ -59,6 +57,8 @@ class Notion:
             if block["type"] == "paragraph":
                 for text in block["paragraph"]["rich_text"]:
                     page_content += text["plain_text"] + "\n"
+
+        print(page_content)
 
         return page_content
 

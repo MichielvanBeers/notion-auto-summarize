@@ -1,39 +1,45 @@
-import openai
-import re
+import requests
+import json
 
 
 class OpenAIRequest:
-    def __init__(self, token: str) -> None:
+    def __init__(self, token: str, model: str) -> None:
         self.token = token
+        self.model = model
 
-    def get_summary(self, text: str) -> str:
+    def get_summary(self, prompt: str) -> str:
         """
-        Query the OpenAI end-point using the 'tl;dr' prompt
-        and clean the end-result to string.
+        Query the OpenAI end-point
         """
-        openai.api_key = self.token
+        url = "https://api.openai.com/v1/chat/completions"
 
-        body = text + "\n\n Tl;dr"
+        headers = {
+            "Authorization": "Bearer " + self.token,
+            "Content-Type": "application/json",
+        }
 
-        response = openai.Completion.create(
-            model="text-davinci-002",
-            prompt=body,
-            temperature=0.7,
-            max_tokens=150,
-            top_p=1,
-            frequency_penalty=0,
-            presence_penalty=0,
-        )
+        body = {
+            "model": self.model,
+            "messages": [
+                {
+                    "role": "system",
+                    "content": """You are a summarizer. For every input you receive, 
+                    you return the summary in maximum 400 characters""",
+                },
+                {"role": "user", "content": prompt},
+            ],
+        }
+
+        data = json.dumps(body)
+
+        response = requests.request("POST", url, headers=headers, data=data)
 
         result = ""
+        response_json = response.json()
+        if response.ok:
+            for entry in response_json["choices"]:
+                result += entry["message"]["content"]
+        else:
+            print(f"API returned {response.status_code} with message: {response_json}")
 
-        for content in response["choices"]:
-            result += content["text"]
-
-        clean_result = result.replace("\n", " ").replace("\r", "").lstrip()
-
-        result_without_colon = re.sub(r"^\W+", "", clean_result)
-
-        print(f"Summary result: {result_without_colon}")
-
-        return result_without_colon
+        return result
